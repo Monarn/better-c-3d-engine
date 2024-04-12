@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <assert.h>
+
 #define str const char*
 
 typedef struct
@@ -126,16 +126,28 @@ Shader* createShader(str vertShader, str geomShader, str fragShader)
 
 	}
 
+    int success;	
+		char infoLog[512];
 
-	return shader;
+  
+		glLinkProgram(shader->shaderProgram);
+
+    glGetProgramiv(shader->shaderProgram, GL_LINK_STATUS, &success);
+    
+    if (!success) {
+      glGetProgramInfoLog(shader->shaderProgram, 512, NULL, infoLog);
+      fprintf(stderr, "Shader program linking failed: %s\n", infoLog);
+    }
+    
+    glUseProgram(shader->shaderProgram);
+
+	  return shader;
 
 }
 
 void useShader(Shader* shader)
 {
-	if (shader->active)
-	{
-		glLinkProgram(shader->shaderProgram);
+	if (shader->active) {
 		glUseProgram(shader->shaderProgram);
 	} 
 }

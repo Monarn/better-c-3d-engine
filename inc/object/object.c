@@ -56,6 +56,7 @@ Object* createObject(float vertices[], int sizeVert, int numVert, float color[],
 
 void drawObject(Object* object)
 {
+  useShader(object->shader);
 	glBindVertexArray(object->VAO);
 	glDrawArrays(GL_TRIANGLES, 0, object->numVert);
 }

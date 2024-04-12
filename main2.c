@@ -15,6 +15,12 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int heigth)
 	glViewport(0,0,width, heigth);
 }
 
+void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+    fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+           (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+           type, severity, message);
+}
+
 int main(void)
 {
 	glfwInit();
@@ -42,6 +48,9 @@ int main(void)
 
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
+  glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(MessageCallback, 0);
+
 	glfwSwapInterval(1);
 
 	float color[] = 
@@ -64,6 +73,7 @@ int main(void)
 	};
 	 
 	Object* obj = createObject(vertices, sizeof(vertices), sizeof(vertices)/sizeof(float), color, sizeof(color), indices, sizeof(indices), shader);
+
 
 	while (!glfwWindowShouldClose(window))
 	{
